@@ -244,8 +244,7 @@ public class NettyClient {
 			client.connect();
 			for(int i=0;i<1;i++) {
 				client.sendMessage(getMsg());
-				Thread.sleep(1000);
-			}
+		     }
 		} catch (Exception e) {
 			log.error("main error",e);
 		}
