@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration   scan="true" scanPeriod="60 seconds"
+    xmlns="http://ch.qos.logback/xml/ns/logback"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://ch.qos.logback/xml/ns/logback https://raw.githubusercontent.com/enricopulatzo/logback-XSD/master/src/main/xsd/logback.xsd">
+    <!-- (3)应用名称 变量-->
+    <property name="APP_NAME" value="jt808"/>
+    <!-- (4)日志文件根目录变量(${APP_NAME}是上面配置的应用名称) -->
+    <property name="LOG_HOME" value="/data/${APP_NAME}/logs"/>
+    <!-- 输出到控制台 -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender" >
+        <!-- 输出的格式 -->
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger[%L]:%n %msg%n</pattern>
+            <charset>utf-8</charset>
+        </encoder>
+    </appender>
+     <appender name="debugFile" class="ch.qos.logback.core.rolling.RollingFileAppender" >
+     	<filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level >debug</level>
+            <onMatch>ACCEPT</onMatch>  <!-- 如果命中就使用这条规则 -->
+            <onMismatch>DENY</onMismatch>  <!-- 如果没有命中就 禁止这条日志-->
+        </filter>
+        <file>${LOG_HOME}/${APP_NAME}_debug.blog</file>
+        <!-- 配置滚动的策略 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy" >
+            <!-- 日志名称的格式 -->
+            <fileNamePattern>${LOG_HOME}/${APP_NAME}_debug-%d{yyyy-MM-dd}.%i.blog</fileNamePattern>
+            <maxFileSize>5MB</maxFileSize>      
+            <maxHistory>360</maxHistory>  
+            <totalSizeCap>200MB</totalSizeCap>  
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger[%L]: %msg%n</pattern>
+        </encoder>
+    </appender>
+    <appender name="infoFile" class="ch.qos.logback.core.rolling.RollingFileAppender" >
+     	<filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level >info</level>
+            <onMatch>ACCEPT</onMatch>  <!-- 如果命中就使用这条规则 -->
+            <onMismatch>DENY</onMismatch>  <!-- 如果没有命中就 禁止这条日志-->
+        </filter>
+        <file>${LOG_HOME}/${APP_NAME}_info.blog</file>
+        <!-- 配置滚动的策略 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy" >
+            <!-- 日志名称的格式 -->
+            <fileNamePattern>${LOG_HOME}/${APP_NAME}_info-%d{yyyy-MM-dd}.%i.blog</fileNamePattern>
+            <maxFileSize>5MB</maxFileSize>      
+            <maxHistory>360</maxHistory>  
+            <totalSizeCap>200MB</totalSizeCap>  
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger[%L]:  %msg%n</pattern>
+        </encoder>
+    </appender>
+    <appender name="errorFile" class="ch.qos.logback.core.rolling.RollingFileAppender" >
+     	<filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level >error</level>
+            <onMatch>ACCEPT</onMatch>  <!-- 如果命中就使用这条规则 -->
+            <onMismatch>DENY</onMismatch>  <!-- 如果没有命中就 禁止这条日志-->
+        </filter>
+        <file>${LOG_HOME}/${APP_NAME}_error.blog</file>
+        <!-- 配置滚动的策略 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy" >
+            <!-- 日志名称的格式 -->
+            <fileNamePattern>${LOG_HOME}/${APP_NAME}_error-%d{yyyy-MM-dd}.%i.blog</fileNamePattern>
+            <maxFileSize>5MB</maxFileSize>      
+            <maxHistory>360</maxHistory>  
+            <totalSizeCap>200MB</totalSizeCap>  
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger[%L]: %n %msg%n</pattern>
+        </encoder>
+    </appender>
+    
+    <logger name="druid.sql"  level="WARN" />
+    <logger name="org.springframework.scheduling.support.TaskUtils$LoggingErrorHandler"  level="off" />
+   
+    <!--(1)正式环境设置 error -->
+    <root level="info" >
+        <!--(2)正式环境去掉 STDOUT与 infoFile -->
+        <appender-ref ref="STDOUT"  />  
+        <appender-ref ref="infoFile" />
+        <appender-ref ref="errorFile" />
+      	<!-- <appender-ref ref="debugFile" /> -->
+    </root>
+</configuration>
